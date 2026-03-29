@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include "data_types.h"
+#include "queue.h"
 
 static char check_path(const char *path){
     struct stat path_stat;
@@ -19,17 +21,56 @@ static char check_path(const char *path){
     }
 }
 
-int *dfs(char **argv){
+void *dfs(char **argv){
+    FileNode *fileHead = (FileNode *)malloc(sizeof(FileNode));
+    fileHead->filePath = NULL;
+    fileHead->wordList = NULL;
+    fileHead->next = NULL;
+
 	char err = 0;
-    char *curr = argv
-    while(curr != NULL){
+    Queue *q = init();
+
+    char *temp = *argv;
+    while(temp){
+        enqueue(q, temp);
+        temp +=1;
+    }
+
+    if(q->size == 0){
+        free(q);
+        return NULL;
+    }
+
+    FileNode *tempNode = fileHead;
+
+    char *currPath = dequeue(q);
+    while(currPath != NULL){
+        
         int isDir = check_path(curr);
         if(isDir == -1){
             err = -1
             continue;
         }
         else if(isDir == 0){
+            size_t len = strlen(currPath);
+            if(strcmp(currPath + len - 4), ".txt" != 0 || strcmp(currPath,".") == 0){
+                free(currPath);
+                curr = dequeue(q);
+                continue;
+            }
+
+            FileNode *newNode = malloc(sizeof(FileNode));
+            newNode->filePath = curr;
+            newNode->wordList = NULL;
+            newNode->next = NULL;
+            tempNode = newNode;
+        }
+        else{
             
         }
+
+        curr = dequeue(q);
     }
+
+    free_queue(q)
 }
