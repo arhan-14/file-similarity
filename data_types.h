@@ -1,16 +1,19 @@
-#ifndef DFS_H
-#define DFS_H
+#ifndef DATA_TYPES_H
+#define DATA_TYPES_H
 
-struct fileNode{
+struct FileNode;
+struct WordNode;
+
+typedef struct FileNode {
     char *filePath;
-    struct wordNode *wordList;
-    struct fileNode *next;
-};
+    struct WordNode *wordList;
+    struct FileNode *next;
+} FileNode;
 
-struct wordNode{
+typedef struct WordNode{
     char *word;
     float freq;
-    struct wordNode *next;
-};
+    struct WordNode *next;
+} WordNode;
 
 #endif
