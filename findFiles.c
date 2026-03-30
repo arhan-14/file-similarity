@@ -42,18 +42,6 @@ static int isHiddenName(const char *path) {
     return base[0] == '.';
 }
 
-typedef struct {
-    char *path;
-    int fromArg; 
-} QItem;
-
-static QItem *newQItem(char *path, int fromArg) {
-    QItem *item = malloc(sizeof(QItem));
-    if (!item) { perror("malloc"); exit(EXIT_FAILURE); }
-    item->path = path;
-    item->fromArg = fromArg;
-    return item;
-}
 
 FileNode *findFiles(char **argv, int *err) {
     if (err) *err = 0; 
@@ -66,10 +54,15 @@ FileNode *findFiles(char **argv, int *err) {
     for (char **arg = argv; *arg; arg++) {
         if (isHiddenName(*arg)) continue;
 
-        char *copy = strdup(*arg);
-        if (!copy) { perror("strdup"); exit(EXIT_FAILURE); }
+        char *copy = malloc(strlen(*arg) + 1);
+        if (copy == NULL) {
+            perror("malloc");
+            exit(1);
+        }
+        strcpy(copy, *arg);
+        if (!copy) { perror("copy"); exit(EXIT_FAILURE); }
 
-        enqueue(q, newQItem(copy, 1));
+        enqueue(q, copy, 1);
     }
 
     if (q->size == 0) {
@@ -79,10 +72,10 @@ FileNode *findFiles(char **argv, int *err) {
     }
 
     FileNode *tail = fileHead;
-    QItem *curr = dequeue(q);
+    QueueNode *curr = dequeue(q);
 
     while (curr != NULL) {
-        char *currPath = curr->path;
+        char *currPath = curr->data;
         int fromArg  = curr->fromArg;
         free(curr);
 
@@ -118,7 +111,7 @@ FileNode *findFiles(char **argv, int *err) {
                     if (!childPath) { perror("malloc"); exit(EXIT_FAILURE); }
                     snprintf(childPath, len, "%s/%s", currPath, entry->d_name);
 
-                    enqueue(q, newQItem(childPath, 0));
+                    enqueue(q, childPath, 0);
                 }
                 closedir(dir);
             }

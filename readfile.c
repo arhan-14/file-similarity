@@ -26,8 +26,12 @@ static WordNode *insertWord(WordNode *head, const char *word) {
 
     WordNode *newNode = malloc(sizeof(WordNode));
     if (!newNode) { perror("malloc"); exit(EXIT_FAILURE); }
-    newNode->word = strdup(word);
-    if (!newNode->word) { perror("strdup"); exit(EXIT_FAILURE); }
+    newNode->word = malloc(strlen(word) + 1);
+    if (newNode->word == NULL) {
+        perror("malloc");
+        exit(1);
+    }
+    strcpy(newNode->word, word);
     newNode->freq = 1.0f;
     newNode->next = cur;
 
@@ -59,7 +63,13 @@ void readFile(FileNode *node) {
             if (isalpha((unsigned char)c) || isdigit((unsigned char)c) || c == '-') {
                 if (wlen + 1 >= wcap) {
                     wcap = wcap == 0 ? 16 : wcap * 2;
-                    word = realloc(word, wcap);
+                    char *tmp = realloc(word, wcap);
+                    if (tmp == NULL) {
+                        free(word);
+                        perror("realloc");
+                        exit(EXIT_FAILURE);
+                    }
+                    word = tmp;
                     if (!word) { perror("realloc"); exit(EXIT_FAILURE); }
                 }
                 word[wlen++] = tolower((unsigned char)c);
@@ -72,6 +82,10 @@ void readFile(FileNode *node) {
                 }
             }
         }
+    }
+
+    if (n < 0) {
+        perror(node->filePath);
     }
 
     if (wlen > 0) {

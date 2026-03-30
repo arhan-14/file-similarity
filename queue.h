@@ -3,6 +3,7 @@
 
 typedef struct QueueNode{
     char *data;
+    int fromArg; 
     struct QueueNode *next;
 } QueueNode;
 
@@ -12,8 +13,9 @@ typedef struct Queue{
     int size;
 } Queue;
 
-void enqueue(Queue *q, char *ptr);
-char *dequeue(Queue *q);
+Queue *init();
+void enqueue(Queue *q, char *ptr, int fromArg);
+QueueNode *dequeue(Queue *q);
 void free_queue(Queue *q);
 
 #endif
