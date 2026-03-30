@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include "data_types.h"
 #include "queue.h"
+#include "readFile.h"
 
 #define SUFFIX ".txt"
 #define SUFFIX_LEN 4
