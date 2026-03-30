@@ -25,6 +25,7 @@ void *dfs(char **argv){
     FileNode *fileHead = (FileNode *)malloc(sizeof(FileNode));
     fileHead->filePath = NULL;
     fileHead->wordList = NULL;
+    fileHead->word_count = 0;
     fileHead->next = NULL;
 
 	char err = 0;
@@ -62,6 +63,7 @@ void *dfs(char **argv){
             FileNode *newNode = malloc(sizeof(FileNode));
             newNode->filePath = curr;
             newNode->wordList = NULL;
+            newNode->word_count = 0; //change this to actual word count after reading file
             newNode->next = NULL;
             tempNode = newNode;
         }

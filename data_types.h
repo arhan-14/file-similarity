@@ -7,6 +7,7 @@ struct WordNode;
 typedef struct FileNode {
     char *filePath;
     struct WordNode *wordList;
+    int word_count;
     struct FileNode *next;
 } FileNode;
 
