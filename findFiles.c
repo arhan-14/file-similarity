@@ -95,6 +95,7 @@ FileNode *findFiles(char **argv, int *err) {
             if (fromArg || hasSuffix(currPath)) {
                 FileNode *node = newFileNode();
                 node->filePath = currPath;
+                readFile(node);
                 tail->next = node;
                 tail = node;
             } else {
